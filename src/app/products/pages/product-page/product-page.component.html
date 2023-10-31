@@ -14,9 +14,13 @@
 
     <div class="col-auto">
       <span 
-        customLabel [color]="color" 
-        [fontSize]="fontSize">Temporal
-        [errors]=
+        customLabel
+        mat-button
+        [color]="color" 
+        [fontSize]="fontSize"
+        [errors]="myForm.get('name')?.errors"
+      >
+        Temporal
       </span>
     </div>
 

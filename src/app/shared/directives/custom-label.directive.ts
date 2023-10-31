@@ -26,10 +26,10 @@ export class CustomLabelDirective implements OnInit {
     }
 
      // ? 
-    @Input() set errors(value: ValidationErrors | null) {
+    @Input() set errors(value: ValidationErrors | null | undefined) {
       this._errors = value;
 
-      console.log( value );
+      this.setErrorMessage();
     }
 
   //Accedemos al elemento HTML en el cual está la directiva
@@ -55,7 +55,34 @@ export class CustomLabelDirective implements OnInit {
     if (!this.htmlElement) return; 
 
     this.htmlElement.nativeElement.style.fontSize = this._fontSize;
-
   }
 
+  setErrorMessage():void {
+    if (!this.htmlElement) return; 
+
+    if ( !this._errors) {
+      this.htmlElement.nativeElement.innerText = 'No hay errores';
+      return;
+    }
+
+    const errors = Object.keys(this._errors);
+
+    if ( errors.includes('required') ) {
+      this.htmlElement.nativeElement.innerText = 'Este campo es requerido';
+      return;
+    }
+
+    if ( errors.includes('minlength') ) {
+      const min =     this._errors!['minlength']['requiredLength'];
+      const current = this._errors!['minlength']['actualLength'];
+
+      this.htmlElement.nativeElement.innerText = `Mínimo ${current}/${ min } caracteres.`;
+      return;
+    }
+
+    if ( errors.includes('email') ) {
+      this.htmlElement.nativeElement.innerText = 'En este campo debe ingresar un email.';
+      return;
+    }
+  }
 }
